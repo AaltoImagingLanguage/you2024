@@ -8,12 +8,12 @@ Use ICA to remove ECG and EOG artifacts from the data.
 import argparse
 import numpy as np
 import mne
-from mne.preprocessing import ICA, create_ecg_epochs, create_eog_epochs, find_ecg_events, find_eog_events
+from mne.preprocessing import ICA, create_eog_epochs, find_ecg_events
 from mne_bids import BIDSPath, read_raw_bids
-from config import (fname, n_ecg_components,
-                    n_eog_components, bad_channels, task, eog_chs)
-from mne.io.pick import _picks_to_idx, pick_types, pick_channels
+from config import (fname, n_ecg_components, n_eog_components, task)
+from mne.io.pick import _picks_to_idx
 from mne.epochs import Epochs
+
 # %%
 # Be verbose
 mne.set_log_level('INFO')
@@ -26,6 +26,7 @@ parser.add_argument('--run',  type=int, default=None,
 args = parser.parse_args()
 subject = f'sub-{args.subject:02}'
 print('Processing subject:', subject)
+
 # %%
 run = None if args.run == None else f'{args.run:01}'
 # Construct a raw object that will load the highpass-filtered data.
@@ -36,9 +37,6 @@ bids_path = BIDSPath(subject=subject[-2:], task=task, datatype='meg', processing
 raw = read_raw_bids(bids_path=bids_path, verbose=False)
 
 # %%
-# raw.crop(tmax=578) #subject 12 EOG1 didn't work from 578 s
-# raw.crop(tmax=455) #subject 1
-# %% fitting ica
 n_components = 0.99
 print('Fitting ICA')
 ica = ICA(method='fastica', random_state=42, n_components=n_components)
@@ -74,16 +72,7 @@ raw2 = raw2.filter(
     0.1, 40, l_trans_bandwidth='auto',
     h_trans_bandwidth='auto', filter_length='auto', phase='zero',
     fir_window='hamming', fir_design='firwin', n_jobs=-1)
-# %% find ecg events for plotting
-# import matplotlib.pyplot as plt
-# events, a, b, ecg = find_ecg_events(
-#         raw2,
-#         l_freq=8,
-#         h_freq=16,
-#         return_ecg=True,
-#         reject_by_annotation=True,
-#     )
-# %%
+
 event_id = 999
 ecg_events, _, _, ecg = find_ecg_events(
     raw2,

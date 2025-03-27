@@ -7,15 +7,13 @@ filter tsss-preprocessed data
 import mne
 import argparse
 from mne_bids import BIDSPath, read_raw_bids, write_raw_bids
-from config import fname, bandpass_fmin, bandpass_fmax, task, bad_channels, phase, event_id
+from config import fname, bandpass_fmin, bandpass_fmax, task, event_id
 
 
 # %%
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--subject',  type=int, default=27,
-                    help='The subject to process')
-parser.add_argument('--run',  type=int, default=None,
-                    help='which run', required=False)
+parser.add_argument('--subject',  type=int, help='The subject to process')
+parser.add_argument('--run',  type=int, default=1, help='which run (subject 16 has 2 runs)', required=False)
 args = parser.parse_args()
 subject = args.subject
 print('Processing subject:', subject)

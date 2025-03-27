@@ -17,18 +17,21 @@ from config import (fname,  event_id,
 mne.set_log_level('INFO')
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--subject',  type=int, default=16,
-                    help='The subject to process', required=False)
-parser.add_argument('--runs',  type=int, default=1,
-                    help='how many runs', required=False)
+parser.add_argument('--subject',  type=int, help='The subject to process')
 args = parser.parse_args()
 subject = f'sub-{args.subject:02}'
 print('Processing subject:', subject)
 print(fname.report_html(subject=subject))
 # %%combine epochs
 epochs_list = []
-for run in range(args.runs):
-    run = f'{run+1:01}' if args.runs > 1 else None
+
+if subject == "sub-16":
+    n_runs = 2
+else:
+    n_runs = 1
+
+for run in range(n_runs):
+    run = f'{run+1:01}' if n_runs > 1 else None
 # Construct a raw object that will load the highpass-filtered data.
     bids_path = BIDSPath(subject=subject[-2:], task=task, datatype='meg', processing='filt',
                          run=run,

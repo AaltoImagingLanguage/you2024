@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Config parameters  
+Config parameters
 """
 # %%
 import os
-from fnames import FileNames
+from filename_templates import FileNames
 import getpass
 from socket import getfqdn
 from matplotlib.colors import LinearSegmentedColormap
@@ -22,16 +22,20 @@ host = getfqdn()  # Hostname of the machine running the scripts
 if user == "jiaxin":
     study_path = "/scratch/flexwordrec"
     derivatives_dir = "/scratch/flexwordrec/bids/derivatives"
+    analysis_dir = "/m/nbe/scratch/flexwordrec"
     FREESURFER_HOME = '/usr/local/freesurfer/7.4.0'
 elif user == "vanvlm1":
     study_path = "/m/nbe/scratch/flexwordrec"
-    derivatives_dir = "/m/nbe/scratch/flexwordrec/bids/derivatives/marijn"
+    derivatives_dir = "/m/nbe/scratch/flexwordrec/marijn/bids/derivatives"
+    analysis_dir = "/m/nbe/scratch/flexwordrec/marijn"
+    FREESURFER_HOME = '/usr/local/freesurfer/7.4.1'
     # derivatives_dir = "/scratch/flexwordrec/bids/derivatives"
 else:
     study_path = "/m/nbe/scratch/flexwordrec"
     # derivatives_dir = "/m/nbe/scratch/flexwordrec/bids/derivatives"
     FREESURFER_HOME = '/work/modules/Ubuntu/20.04/amd64/t314/freesurfer/dev-20201103-bd997c7'
     derivatives_dir = "/m/nbe/scratch/flexwordrec/bids/derivatives"
+    analysis_dir = "/m/nbe/scratch/flexwordrec"
 
 subjects = [
 
@@ -62,7 +66,7 @@ subjects = [
     'sub-25',
     'sub-26',
     'sub-27',
-    
+
 ]
 parc = 'aparc.a2009s_custom_gyrus_sulcus_800mm2'
 grow_rois_seeds = {'tc'}
@@ -169,106 +173,12 @@ reg = 0.05
 phase = "zero"
 
 # %%
-# %%
-window_length=75#for smooth 
+window_length=75 # for smooth
 cmap = mpl.cm.magma
 cmaps4 = [cmap(i) for i in np.linspace(0, 0.8, 4)]
-# bounds = [-1, 3, 7, 11, 15]
-# norm = mpl.colors.BoundaryNorm(bounds, cmap.N, extend='both')
-# a=mpl.cm.ScalarMappable(norm=norm, cmap=cmap)
-# cmps=plt.get_cmap('viridis').colors[0:256:85]
 roi_colors =list(plt.get_cmap('tab10').colors[:3])#for rois color
-# cmps=list(plt.get_cmap('tab20b').colors[:4])
-# cmps=list(plt.get_cmap('tab20b').colors[12:16])
-# cmaps4 = list(plt.get_cmap('tab20c').colors[:4])
-# cmaps4=[cmaps4[i] for i in [12,9,6,3]]
-#%%
-# cmaps4 =sns.cubehelix_palette(start=2, rot=0.3, 
-#                                 light=0.window_length, 
-#                               n_colors=4)
-# cmaps4 =sns.cubehelix_palette(
-#     start=0.9, 
-#     # rot=-0.1, 
-
-#     light=0.7, 
-#                                n_colors=4
-#                               )
-# ListedColormap(cmaps4)
-#%%
-# cmps.reverse()
-# observed effects in the rois and time windows
-# roinames_time={'STC':[0.6,0.8,3],#[tin,tmax,compared condition id]
-#                'OTC':[0.6,0.8,1],#1
-#                 'precentral':[0.6,0.8,2],#2
-#                  'IFG':[0.4,0.5,2]#2
-
-# rois_names=['lOT1','lOT2',"mOT","ST1","ST2","pC",]
-# rois_names=['lOT1','lOT2',"ST1","ST2","mOT","pC",]
-
-# rois_names=['vOT',"ST","pC",]
-# rois_id=[40,65,82]#800mm2
 rois_names=["pC","ST",'vOT',]
-rois_id=[82,65,40]#800mm2
-# rois_id=[50,62,32,]#1100mm2
-
-
-# rois_names=['lOT',"ST","mOT","pC",]
-# rois_id=[40,42,65,106,44,82]
-
-# rois_names=['OT1','OT2',"ST","pC"]
-# rois_id=[34,32,50,62,]
-# # can be also added
-# rois = [
-        
-#     'G_oc-temp_lat-fusifor+S_oc-temp_lat-',
-
-#     #   'G_and_S_occipital_inf+S_occipital_ant+S_collat_transv_post-lh',
-
-#     #   'G_pariet_inf-Supramar+G_temp_sup-Plan_tempo+G_temp_sup-G_T_transv+S_temporal_transverse+Lat_Fis-post_sub1-lh',
-#     'G_temp_sup-Lateral+S_temporal_sup_sub1-',
-#     # 'G_temp_sup-Lateral+S_temporal_sup_sub2-lh',
-#     #   'G_temp_sup-Lateral+S_temporal_sup_sub3-lh',
-#     'G_pariet_inf-Supramar+G_temp_sup-Plan_tempo+G_temp_sup-G_T_transv+S_temporal_transverse+Lat_Fis-post_sub1-',
-#     # 'G_Ins_lg_and_S_cent_ins+G_temp_sup-Plan_polar+S_circular_insula_inf+G_insular_short+S_circular_insula_ant_sub2-lh',
-
-#     # 
-#     'G_precentral+S_central+S_precentral-inf-part+S_precentral-sup-part_sub1-',
-
-#     # 'G_and_S_subcentral-',
-#     #   'G_and_S_subcentral-lh',
-
-
-#     # 'G_front_inf-Opercular+G_front_inf-Triangul+S_front_inf_sub2-',
-#     # 'G_front_inf-Opercular+G_front_inf-Triangul+S_front_inf_sub1-',
-
-#     # 'G_orbital+S_orbital-H_Shaped+S_orbital_lateral+S_orbital_med-olfact+G_front_inf-Orbital_sub1-',
-#       # 'G_orbital+S_orbital-H_Shaped+S_orbital_lateral+S_orbital_med-olfact+G_front_inf-Orbital_sub2-',
-# #
-# ]
-
-# rois = [
-#         'G_and_S_occipital_inf+S_occipital_ant+S_collat_transv_post-rh',
-#     'G_oc-temp_lat-fusifor+S_oc-temp_lat-rh',
-
-#       'G_pariet_inf-Supramar+G_temp_sup-Plan_tempo+G_temp_sup-G_T_transv+S_temporal_transverse+Lat_Fis-post_sub1-rh',
-#     'G_temp_sup-Lateral+S_temporal_sup_sub1-rh',
-#     'G_temp_sup-Lateral+S_temporal_sup_sub2-rh',
-#       'G_temp_sup-Lateral+S_temporal_sup_sub3-rh',
-#     'G_pariet_inf-Supramar+G_temp_sup-Plan_tempo+G_temp_sup-G_T_transv+S_temporal_transverse+Lat_Fis-post_sub1-rh',
-#     'G_Ins_lg_and_S_cent_ins+G_temp_sup-Plan_polar+S_circular_insula_inf+G_insular_short+S_circular_insula_ant_sub2-rh',
-
-#     'G_precentral+S_central+S_precentral-inf-part+S_precentral-sup-part_sub2-rh',
-#     'G_precentral+S_central+S_precentral-inf-part+S_precentral-sup-part_sub1-rh',
-#       'G_and_S_subcentral-rh',
-
-
-#     'G_front_inf-Opercular+G_front_inf-Triangul+S_front_inf_sub2-rh',
-#     'G_front_inf-Opercular+G_front_inf-Triangul+S_front_inf_sub1-rh',
-
-#     'G_orbital+S_orbital-H_Shaped+S_orbital_lateral+S_orbital_med-olfact+G_front_inf-Orbital_sub1-rh',
-#       'G_orbital+S_orbital-H_Shaped+S_orbital_lateral+S_orbital_med-olfact+G_front_inf-Orbital_sub2-rh',
-
-# ]
+rois_id=[82,65,40]
 
 # %%% Templates for filenames
 fname = FileNames()
@@ -278,22 +188,16 @@ fname.add('MEG_path', '/m/nbe/archive/flexwordrec/MEG')
 
 fname.add('study_path', study_path)
 fname.add('FREESURFER_HOME', FREESURFER_HOME)
-# fname.add('bids_dir', '{study_path}/pilot_bids/pilot')
 fname.add('bids_dir', '{study_path}/bids')
-fname.add('data_dir', '{study_path}/scripts/data/')
+fname.add("derivatives_dir", derivatives_dir, mkdir=True)
+fname.add("analysis_dir", analysis_dir, mkdir=True)
 
-fname.add('behavioral_dir', '{study_path}/scripts/behavioral_analysis/')
-
-
-fname.add("derivatives_dir", derivatives_dir)
-# fname.add('mri_subjects_dir', '{study_path}/mri_subjects/')
-# fname.add('mri_subjects_dir', '/m/nbe/archive/flexwordrec/mri_subjects/')
-fname.add('mri_subjects_dir', '{study_path}/mri_subjects/')
-fname.add('subjects_dir', '{study_path}/subjects/')
-fname.add('figures_dir', '{study_path}/figures/{subject}/')
-fname.add('meg_dir', '{study_path}/MEG')
-fname.add('anatomy', '{mri_subjects_dir}/{subject}')
-fname.add('bem_dir', '{anatomy}/bem')
+fname.add('mri_subjects_dir', '{analysis_dir}/mri_subjects/', mkdir=True)
+fname.add('subjects_dir', '{analysis_dir}/subjects/', mkdir=True)
+fname.add('figures_dir', '{analysis_dir}/figures/{subject}/', mkdir=True)
+fname.add('meg_dir', '{analysis_dir}/MEG', mkdir=True)
+fname.add('anatomy', '{mri_subjects_dir}/{subject}', mkdir=True)
+fname.add('bem_dir', '{anatomy}/bem', mkdir=True)
 fname.add('sp', spacing)  # Add this so we can use it in the filenames below
 fname.add('src', '{anatomy}/fsaverage_to_{subject}-{sp}-src.fif')
 fname.add('fsaverage_src',
@@ -309,14 +213,14 @@ fname.add('fine_cal', '{cal_path}/sss_cal_Aalto_TRIUXneo_3158.dat')
 fname.add('crosstalk', '{cal_path}/ct_sparse_Aalto_TRIUXneo_3158.fif')
 
 fname.add(
-    'log', '{study_path}/scripts/sbatch/logs/sub-{subject}_{proc}_log.txt')
+    'log', '{analysis_dir}/logs/sub-{subject}_{proc}_log.txt', mkdir=True)
 
 
-fname.add('ica', '{study_path}/subjects/{subject}_ica.fif')
+fname.add('ica', '{subjects_dir}/{subject}_ica.fif')
 # ica for per run
-fname.add('ica1', '{study_path}/subjects/{subject}_run-{run}_ica.fif')
-fname.add('epo', '{study_path}/subjects/{subject}-epo.fif')
-fname.add('epo_con', '{study_path}/subjects/{subject}-{condition}-epo.fif')
+fname.add('ica1', '{subjects_dir}/{subject}_run-{run}_ica.fif')
+fname.add('epo', '{subjects_dir}/{subject}-epo.fif')
+fname.add('epo_con', '{subjects_dir}/{subject}-{condition}-epo.fif')
 fname.add('csd', '{subjects_dir}/{subject}-{condition}-csd.h5')
 fname.add('power', '{subjects_dir}/{subject}-{condition}-dics-power')
 fname.add('trans', '{subjects_dir}/{subject}-trans.fif')
@@ -343,7 +247,7 @@ fname.add('pairs', '{meg_dir}/pairs.npy')
 # fname.add('epo', '{study_path}/subjects/pilot_sub-{subject:02d}-epo.fif')
 
 # Filenames for MNE reports
-fname.add('reports_dir', '{study_path}/reports/')
+fname.add('reports_dir', '{analysis_dir}/reports/')
 fname.add('report', '{reports_dir}/{subject}-report.h5')
 fname.add('report_html',
           '{reports_dir}/{subject}-report.html')
@@ -391,4 +295,4 @@ cm3 = LinearSegmentedColormap.from_list(cmap_name, colors3, N=n_bin)
 #
 fname.add('label_path',
           '{mri_subjects_dir}/fsaverage/label')
-fname.add('mdpc_dir', '{study_path}/mdpc/')
+fname.add('mdpc_dir', '{derivatives}/mdpc/')
