@@ -27,8 +27,7 @@ plt.ioff()
 mne.set_log_level('INFO')
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--subject',  type=int, default=1,
-                    help='The subject to process', required=False)
+parser.add_argument('--subject',  type=int, help='The subject to process')
 args = parser.parse_args()
 subject = f'sub-{args.subject:02}'
 print('Processing subject:', subject)
